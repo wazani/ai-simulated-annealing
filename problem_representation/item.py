@@ -11,3 +11,9 @@ class Item:
         
     def __repr__(self):
         return f"Item(L: {self.label}, W: {self.weight}, V: {self.value})"
+    
+    def __str__(self) -> str:
+        return (f"""{'{'}label: {self.label},weight: {self.weight},value: {self.value}{'}'}""")
+    
+    def json(self):
+        return {"label": self.label, "weight": self.weight, "value": self.value}

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/x-icon" href="/school-bag.png" />
+    <link rel="stylesheet" href="./styles/vendor/datatables.css" />
+    <link rel="stylesheet" href="./styles/styles.css" />
+
+    <title>Knapsack (SA)</title>
+
+    <script type="text/javascript" src="./libs/tailwindcss3417.min.js"></script>
+    <script type="text/javascript" src="./libs/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="./libs/dataTables.min.js"></script>
+    <script type="text/javascript" src="/eel.js"></script>
+    <script type="text/javascript" src="/items_summary_table.js"></script>
+    <script type="text/javascript" src="/items_generator.js"></script>
+    <script type="text/javascript" src="/items_table.js"></script>
+    <script type="text/javascript" src="/main.js"></script>
+  </head>
+
+  <body class="bg-gray-50">
+    <div id="app" class="flex h-screen">
+      <aside
+        id="sidebar"
+        class="bg-white w-full sm:w-80 p-2 flex-shrink-0 border-r border-gray-200 shadow overflow-y-auto custom-scrollbar"
+      >
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">
+          <div class="flex items-center">
+            <div class="w-14 p-2">
+              <img src="/school-bag.png" />
+            </div>
+            <div class="flex-grow p-2">Knapsack (SA)</div>
+          </div>
+        </h1>
+
+        <div class="space-y-5">
+          <div class="bg-gray-50 p-3 rounded border border-gray-100">
+            <h2 class="text-lg font-semibold text-indigo-600">
+              Problem Parameters
+            </h2>
+            <div class="flex justify-between items-center py-2">
+              <label for="capacity" class="text-sm font-medium text-gray-600">
+                Capacity (kg):
+              </label>
+              <input
+                type="number"
+                id="capacity"
+                value="100"
+                class="w-24 p-2 border border-gray-300 rounded text-sm"
+              />
+            </div>
+            <div class="pt-2 border-t border-gray-200">
+              <div class="flex justify-between items-center mb-2">
+                <label
+                  for="num_items"
+                  class="text-sm font-medium text-gray-600"
+                >
+                  Available Items (#):
+                </label>
+                <input
+                  type="number"
+                  id="num_items"
+                  value="10"
+                  class="w-24 p-2 border border-gray-300 rounded text-sm"
+                />
+              </div>
+              <button
+                onclick="generateKnapsackItems()"
+                class="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-md p-2 rounded transition duration-150"
+              >
+                Generate Random Items
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 p-3 rounded border border-gray-100">
+            <h2 class="text-lg font-semibold text-indigo-600">SA Parameters</h2>
+
+            <div class="flex justify-between items-center py-2">
+              <label for="max_iter" class="text-sm font-medium text-gray-600"
+                >Max Iterations:</label
+              >
+              <input
+                type="number"
+                id="max_iter"
+                min="100"
+                value="1000"
+                step="100"
+                class="w-24 p-2 border border-gray-300 rounded text-sm"
+              />
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <label
+                for="initial_temp"
+                class="text-sm font-medium text-gray-600"
+                >Initial Temp (T₀):</label
+              >
+              <input
+                type="number"
+                id="initial_temp"
+                min="100"
+                value="2000"
+                step="100"
+                class="w-24 p-2 border border-gray-300 rounded text-sm"
+              />
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <label
+                for="cooling_factor"
+                class="text-sm font-medium text-gray-600"
+                >Cooling Factor (α):</label
+              >
+              <input
+                type="number"
+                id="cooling_factor"
+                min="0.8"
+                min="0"
+                value="0.95"
+                step="0.001"
+                class="w-24 p-2 border border-gray-300 rounded text-sm"
+              />
+            </div>
+
+            <div class="space-y-3">
+              <label
+                for="logarithmic-cooling"
+                class="flex items-center p-3 rounded border border-gray-200 cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
+              >
+                <input
+                  type="radio"
+                  id="logarithmic-cooling"
+                  name="cooling-schedule"
+                  value="logarithmic"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                  checked
+                />
+                <div class="ml-3 text-sm">
+                  <p class="font-medium text-gray-700">Logarithmic Cooling</p>
+                </div>
+              </label>
+              <label
+                for="linear-cooling"
+                class="flex items-center p-3 rounded border border-gray-200 cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
+              >
+                <input
+                  type="radio"
+                  id="linear-cooling"
+                  name="cooling-schedule"
+                  value="linear"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                />
+                <div class="ml-3 text-sm">
+                  <p class="font-medium text-gray-700">Geometric Cooling</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="flex align-center justify-between mb-3">
+            <button
+              id="start-btn"
+              onclick="startOptimization()"
+              class="w-full bg-green-600 hover:bg-green-700 text-white text-md p-2 font-bold rounded transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              START
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <main id="main-content" class="grow p-5 overflow-y-auto custom-scrollbar">
+        <div class="bg-white p-6 rounded shadow">
+          <div
+            id="item-table-placeholder"
+            class="border-dashed border-gray-300 rounded"
+          >
+            <div class="table-container">
+              <table id="itemTable" class="display" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th>Label</th>
+                    <th>Weight</th>
+                    <th>Value</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <dialog
+      id="myDialog"
+      class="p-0 rounded shadow-lg w-[70vw] h-[85vh] overflow-hidden"
+    >
+      <div class="p-6 flex-1 overflow-y-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
+          <div
+            class="bg-white p-5 rounded-sm shadow border-t-4 border-green-500"
+          >
+            <p class="text-sm font-medium text-gray-500">Best State</p>
+            <div
+              id="best-display"
+              class="font-bold text-green-700 text-xl mt-1 overflow-hidden truncate w-full"
+            >
+              <p class="value text-2xl">-</p>
+              <p class="weight text-xl">-</p>
+            </div>
+          </div>
+          <div
+            class="bg-white p-5 rounded-sm shadow border-t-4 border-blue-500"
+          >
+            <p class="text-sm font-medium text-gray-500">Current State</p>
+            <div
+              id="current-display"
+              class="font-bold text-blue-700 text-xl mt-1 overflow-hidden truncate w-full"
+            >
+              <p class="value text-2xl">-</p>
+              <p class="weight text-xl">-</p>
+            </div>
+          </div>
+          <div
+            class="bg-white p-5 rounded-sm shadow border-t-4 border-indigo-500"
+          >
+            <p class="text-sm font-medium text-gray-500">
+              Iteration/Temperature
+            </p>
+            <div
+              id="iter-display"
+              class="text-xl font-bold text-gray-900 mt-1 overflow-hidden truncate w-full"
+            >
+              <p class="value text-2xl">-</p>
+              <p class="weight text-xl">-</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-lg text-green-700">Best State Items</p>
+        <div id="best-items-summary-container" class="w-full"></div>
+      </div>
+
+      <!-- Results Dialog -->
+      <div class="p-6 border-t bg-white sticky bottom-0">
+        <div class="flex justify-end gap-4">
+          <button
+            id="stop-btn"
+            onclick="stopOptimization()"
+            class="bg-red-600 text-white text-md font-bold py-2 px-6 rounded transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            STOP
+          </button>
+          <button
+            id="closeDialogButton"
+            onclick="closeDialog()"
+            class="bg-gray-200 font-bold text-md py-2 px-6 rounded transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </dialog>
+  </body>
+</html>

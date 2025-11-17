@@ -24,3 +24,12 @@ class Bag:
             f"Bag(\n  Capacity: {self.capacity},\n  Weight: {self.get_weight()}, "
             f"\n  Value: {self.get_value()}, \n  Items: \n    {"\n    ".join(repr(item) for item in self.items)}\n)"
         )
+    
+    def __str__(self) -> str:
+        return (f"""{'{'}Capacity: {self.capacity},Weight: {self.get_weight()},Value: {self.get_value()},Items: \n    {"\n    ".join(str(item) for item in self.items)}{'}'}""")
+    
+    def json(self):
+        return {"capacity": self.capacity,
+                "weight": self.get_weight(),
+                "value": self.get_value(),
+                "items": list(map(lambda item: item.json(),self.items))}
