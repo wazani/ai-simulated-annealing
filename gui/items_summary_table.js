@@ -7,10 +7,10 @@ function generateScrollableTableHTML(items) {
               item.label
             }</td>
             <td class="px-2 py-2 whitespace-nowrap text-xs text-gray-500 w-1/3">${item.weight.toFixed(
-              2
+              0
             )}</td>
             <td class="px-2 py-2 whitespace-nowrap text-xs text-gray-500 w-1/3">${item.value.toFixed(
-              2
+              0
             )}</td>
         </tr>
     `

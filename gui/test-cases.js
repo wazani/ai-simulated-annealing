@@ -3,7 +3,7 @@ function loadTestCase(key, index) {
   console.log(
     `The expected optimal solution for case ${key}-${index} is: ${test_case.expected_optimal_value}`
   );
-  document.querySelector("#capacity").setAttribute("value", test_case.capacity);
+  document.querySelector("#capacity").value = test_case.capacity;
   updateTableData(test_case.items);
 }
 

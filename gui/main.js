@@ -15,6 +15,10 @@ function disableButton(btn, status) {
 
 function closeDialog() {
   dialog.close();
+  clearDialog();
+}
+
+function clearDialog() {
   updateState(iterDisplay, "-", "-");
   updateState(currentStateDisplay, "-", "-");
   updateState(bestStateDisplay, "-", "-");
@@ -45,6 +49,8 @@ function startOptimization() {
     is_log_cooling,
     is_objective,
   });
+
+  clearDialog();
 
   disableButton(startBtn, true);
   disableButton(retryBtn, true);
