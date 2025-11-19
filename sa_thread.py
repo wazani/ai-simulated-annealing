@@ -16,8 +16,8 @@ def fill_bag_randomly(bag: Bag, availableItems: list[Item]):
             bag.add_item(item)
 
 
-def runSA(user_config, message_queue, terminate_event):
-    print("Searching process started")
+def run(user_config, message_queue, terminate_event):
+    print("sa thread started")
     try:
         config = Config(
             max_iteration=int(user_config["max_iteration"]),

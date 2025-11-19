@@ -177,6 +177,16 @@ function handleCoolingMethodChange(radio) {
   }
 }
 
+function preventDialogFromClose() {
+  document.addEventListener("keydown", (event) => {
+    if (dialog && dialog.open) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+      }
+    }
+  });
+}
+
 //global dom elements
 let startBtn,
   stopBtn,
@@ -207,4 +217,5 @@ document.addEventListener("DOMContentLoaded", () => {
   disableButton(closeDialogBtn, false);
   itemsSummaryTable.innerHTML = generateScrollableTableHTML([]);
   generateKnapsackItems();
+  preventDialogFromClose();
 });

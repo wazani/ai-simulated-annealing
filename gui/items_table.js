@@ -110,5 +110,12 @@ function addNewItem() {
   itemsGrid.applyColumnState({
     defaultState: { sort: null },
   });
+  itemsGrid.setFilterModel(null);
   itemsGrid.applyTransaction(transaction);
 }
+
+window.addEventListener("resize", () => {
+  if (itemsGrid) {
+    itemsGrid.sizeColumnsToFit();
+  }
+});
