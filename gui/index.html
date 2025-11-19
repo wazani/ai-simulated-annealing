@@ -21,15 +21,15 @@
       >
         <h1 class="text-2xl font-bold text-gray-800 mb-2">
           <div class="flex items-center">
-            <div class="w-14 p-2">
+            <div class="w-12">
               <img src="/school-bag.png" />
             </div>
             <div class="flex-grow p-2">Knapsack (SA)</div>
           </div>
         </h1>
 
-        <div class="space-y-5">
-          <div class="bg-gray-50 p-3 rounded border border-gray-100">
+        <div class="space-y-3">
+          <div class="bg-gray-50 p-3 py-2 rounded border border-gray-100">
             <h2 class="text-lg font-semibold text-indigo-600">
               Problem Parameters
             </h2>
@@ -68,7 +68,7 @@
             </div>
           </div>
 
-          <div class="bg-gray-50 p-3 rounded border border-gray-100">
+          <div class="bg-gray-50 p-3 py-2 rounded border border-gray-100">
             <h2 class="text-lg font-semibold text-indigo-600">SA Parameters</h2>
 
             <div class="flex justify-between items-center py-2">
@@ -99,26 +99,10 @@
                 class="w-24 p-2 border border-gray-300 rounded text-sm"
               />
             </div>
-            <div class="border border-gray-200">
-              <label
-                for="logarithmic-cooling"
-                class="flex items-center p-3 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
-              >
-                <input
-                  type="radio"
-                  id="logarithmic-cooling"
-                  name="cooling-schedule"
-                  value="logarithmic"
-                  onchange="handleCoolingMethodChange(this)"
-                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                />
-                <div class="ml-3 text-sm">
-                  <p class="font-medium text-gray-700">Logarithmic Cooling</p>
-                </div>
-              </label>
+            <div class="border border-gray-300 my-2">
               <label
                 for="linear-cooling"
-                class="flex items-center p-3 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
+                class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
               >
                 <input
                   type="radio"
@@ -133,21 +117,71 @@
                   <p class="font-medium text-gray-700">Geometric Cooling</p>
                 </div>
               </label>
-            </div>
-            <div class="flex justify-between items-center py-2">
               <label
-                for="cooling_factor"
-                class="text-sm font-medium text-gray-600"
-                >Cooling Factor (α):</label
+                for="logarithmic-cooling"
+                class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
               >
-              <input
-                type="number"
-                id="cooling_factor"
-                min="0"
-                value="0.99"
-                step="0.001"
-                class="w-24 p-2 border border-gray-300 rounded text-sm"
-              />
+                <input
+                  type="radio"
+                  id="logarithmic-cooling"
+                  name="cooling-schedule"
+                  value="logarithmic"
+                  onchange="handleCoolingMethodChange(this)"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                />
+                <div class="ml-3 text-sm">
+                  <p class="font-medium text-gray-700">Logarithmic Cooling</p>
+                </div>
+              </label>
+              <div class="flex justify-between items-center p-2">
+                <label
+                  for="cooling_factor"
+                  class="text-sm font-medium text-gray-600"
+                  >Cooling Factor (α):</label
+                >
+                <input
+                  type="number"
+                  id="cooling_factor"
+                  min="0"
+                  value="0.99"
+                  step="0.001"
+                  class="w-24 p-2 border border-gray-300 rounded text-sm"
+                />
+              </div>
+            </div>
+
+            <div class="border border-gray-300">
+              <label
+                for="objective-successor"
+                class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
+              >
+                <input
+                  type="radio"
+                  id="objective-successor"
+                  name="successor-function"
+                  value="objective"
+                  checked
+                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                />
+                <div class="ml-3 text-sm">
+                  <p class="font-medium text-gray-700">Objective Successor</p>
+                </div>
+              </label>
+              <label
+                for="random-successor"
+                class="flex items-center p-2 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
+              >
+                <input
+                  type="radio"
+                  id="random-successor"
+                  name="successor-function"
+                  value="random"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                />
+                <div class="ml-3 text-sm">
+                  <p class="font-medium text-gray-700">Random Successor</p>
+                </div>
+              </label>
             </div>
           </div>
 

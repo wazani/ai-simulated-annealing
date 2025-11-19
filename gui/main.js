@@ -30,6 +30,9 @@ function startOptimization() {
   const is_log_cooling =
     document.querySelector('input[name="cooling-schedule"]:checked').value ==
     "logarithmic";
+  const is_objective =
+    document.querySelector('input[name="successor-function"]:checked').value ==
+    "objective";
   const items = readDataFromTable();
   const capacity = document.querySelector("#capacity").value;
 
@@ -40,6 +43,7 @@ function startOptimization() {
     capacity,
     items,
     is_log_cooling,
+    is_objective,
   });
 
   disableButton(startBtn, true);
@@ -54,7 +58,8 @@ function startOptimization() {
     initial_temperature,
     cooling_factor,
     capacity,
-    is_log_cooling
+    is_log_cooling,
+    is_objective
   );
   updateProgressMessage(true, "Sending");
   dialog.showModal();
@@ -74,13 +79,15 @@ function updateConfigSummary(
   initial_temperature,
   cooling_factor,
   capacity,
-  is_log_cooling
+  is_log_cooling,
+  is_objective
 ) {
   const data = {
     capacity: capacity,
     "Max Iter.": max_iteration,
     "Initial Temp.": initial_temperature,
     Cooling: is_log_cooling ? "Algorithmic " : "Geometric",
+    Successor: is_objective ? "Objective" : "Random",
     Factor: cooling_factor,
   };
 

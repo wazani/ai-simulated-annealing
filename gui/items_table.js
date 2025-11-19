@@ -71,8 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
     rowData: [],
     domLayout: "auto",
     pagination: true,
-    paginationPageSize: 20,
-    paginationPageSizeSelector: [10, 20, 50],
+    paginationPageSize: 10,
+    paginationPageSizeSelector: [10, 20, 30, 40],
     defaultColDef: {
       resizable: false,
       sortable: true,
