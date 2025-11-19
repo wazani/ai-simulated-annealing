@@ -1,77 +1,114 @@
-let nextId = 1;
-let table;
+let itemsGrid;
 
-function updateTableData(items) {
-  table.clear().rows.add(items).draw();
-  nextId = items.length + 1;
+class ActionsCellRenderer {
+  init(params) {
+    this.params = params;
+    this.eGui = document.createElement("div");
+    this.eGui.innerHTML = `<button class="delete-button delete-btn">Delete</button>`;
+    this.deleteButton = this.eGui.querySelector(".delete-button");
+    this.deleteButton.addEventListener("click", this.onDeleteClick.bind(this));
+  }
+
+  getGui() {
+    return this.eGui;
+  }
+
+  onDeleteClick() {
+    const record = this.params.data;
+    const transaction = {
+      remove: [record],
+    };
+    this.params.api.applyTransaction(transaction);
+  }
+
+  destroy() {
+    if (this.deleteButton) {
+      this.deleteButton.removeEventListener("click", this.onDeleteClick);
+    }
+  }
 }
 
-$(document).ready(function () {
-  table = $("#itemTable").DataTable({
-    data: [],
-    searching: false,
-    sort: false,
-    pageLength: 25,
-    layout: {
-      topEnd: $("<button>", {
-        id: "addRowBtn",
-        class: "add-new-btn",
-        text: "+ Add New",
-      })[0],
-      topStart: { info: { text: "Available Items" } },
-      bottomEnd: "paging",
-      bottomStart: "pageLength",
+const columnDefs = [
+  {
+    headerName: "Label",
+    field: "label",
+    editable: true,
+    flex: 1,
+    cellEditor: "agTextCellEditor", // Standard text input for the label
+  },
+  {
+    headerName: "Weight",
+    field: "weight",
+    editable: true,
+    cellEditor: "agNumberCellEditor",
+    flex: 1,
+    valueFormatter: (params) =>
+      params.value != null ? Number(params.value).toFixed(0) : "",
+  },
+  {
+    headerName: "Value",
+    field: "value",
+    editable: true,
+    cellEditor: "agNumberCellEditor",
+    flex: 1,
+    valueFormatter: (params) =>
+      params.value != null ? `$${Number(params.value).toFixed(0)}` : "",
+  },
+  {
+    headerName: "Actions",
+    minWidth: 100,
+    cellRenderer: ActionsCellRenderer,
+    editable: false,
+    sortable: false,
+    filter: false,
+    flex: 1,
+  },
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+  const gridOptions = {
+    columnDefs: columnDefs,
+    rowData: [],
+    domLayout: "auto",
+    pagination: true,
+    paginationPageSize: 20,
+    paginationPageSizeSelector: [10, 20, 50],
+    defaultColDef: {
+      resizable: false,
+      sortable: true,
+      pagination: true,
+      filter: true,
+      suppressMovable: true,
+      suppressMovableColumns: true,
+      suppressDragLeaveHidesColumns: true,
     },
-    columns: [
-      {
-        data: "label",
-        render: function (data, type, row) {
-          return `<input class="data-table-input p-2 border border-gray-300 rounded text-sm" type="text" value="${data}" data-field="label" id="label-${row.id}" data-id="${row.id}">`;
-        },
-      },
-      {
-        data: "weight",
-        render: function (data, type, row) {
-          return `<input class="data-table-input p-2 border border-gray-300 rounded text-sm" type="number" value="${data}" data-field="weight" id="weight-${row.id}" data-id="${row.id}">`;
-        },
-      },
-      {
-        data: "value",
-        render: function (data, type, row) {
-          return `<input class="data-table-input p-2 border border-gray-300 rounded text-sm" type="number" value="${data}" data-field="value" id="value-${row.id}" data-id="${row.id}">`;
-        },
-      },
-      {
-        data: null,
-        defaultContent:
-          '<button class="action-button delete-btn">Delete</button>',
-        orderable: false,
-      },
-    ],
-  });
+  };
 
-  $("#itemTable tbody").on("input", "input", function () {
-    const input = $(this);
-    const value = input.val();
-    const field = input.data("field");
-    const row = table.row(input.closest("tr"));
-    const rowData = row.data();
-
-    rowData[field] = value;
-  });
-
-  $("#itemTable tbody").on("click", ".delete-btn", function () {
-    table.row($(this).parents("tr")).remove().draw();
-  });
-
-  $("#addRowBtn").on("click", function () {
-    const newData = Array.from(table.data());
-    newData.unshift({
-      id: nextId,
-      label: "New Item",
-      weight: 1,
-      value: 1,
-    });
-    updateTableData(newData);
-  });
+  const gridDiv = document.querySelector("#items-grid");
+  itemsGrid = new agGrid.createGrid(gridDiv, gridOptions);
 });
+
+function updateTableData(items) {
+  itemsGrid.setGridOption("rowData", items);
+  itemsGrid.sizeColumnsToFit();
+}
+
+function readDataFromTable() {
+  //return itemsGrid.getGridOption("rowData");
+  const rowData = [];
+  itemsGrid.forEachNode(function (node) {
+    rowData.push(node.data);
+  });
+  return rowData;
+}
+
+function addNewItem() {
+  const transaction = {
+    add: [{ label: "New item", weight: 1, value: 1 }],
+    addIndex: 0,
+  };
+  itemsGrid.applyColumnState({
+    defaultState: { sort: null },
+  });
+  itemsGrid.applyTransaction(transaction);
+}

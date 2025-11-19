@@ -36,22 +36,20 @@ div.dt-layout-row.dt-layout-table.dt-layout-table {
     }
 }
 
-.add-new-btn {
-    color: green;
-    font-weight: bold;
-    opacity: 0.6;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
 #myDialog[open]{
     display: flex;
     flex-direction: column;
 }
 
-.data-table-input{
-    max-width: 100%;
-    width: 100%;
+
+.dialog-footer{
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ag-root-wrapper-body, .ag-root  {
+   width: 100%;
+}
+
+.ag-root-wrapper.ag-root-wrapper{
+    border-radius: 0;
 }

@@ -9,10 +9,13 @@ message_queue_process=None
 message_queue=None
 
 def progress_callback(queue_msg):
-    #queue.put((i,1, best_state, current_state,current_temp))
-    current_state=queue_msg[3]
-    best_state=queue_msg[2]
-    eel.progress({'i': queue_msg[0],'status': queue_msg[1], 'current_temp':queue_msg[4], "current_state":current_state.bag.json(), "best_state":best_state.bag.json()})
+    if(queue_msg[0]>=0):
+        current_state=queue_msg[3]
+        best_state=queue_msg[2]
+        eel.progress({'i': queue_msg[0],'status': queue_msg[1], 'current_temp':queue_msg[4], "current_state":current_state.bag.json(), "best_state":best_state.bag.json()})
+    else:
+        eel.progress({'i': queue_msg[0],'status': queue_msg[1], 'message':queue_msg[2]})
+
 
 def queue_manager(queue: multiprocessing.Queue):
     while(True):
@@ -23,7 +26,7 @@ def queue_manager(queue: multiprocessing.Queue):
             progress_callback(msg)
             if msg[1] == -1: 
                 break
-        eel.sleep(.001)
+        #eel.sleep(.001)
 
 
 @eel.expose

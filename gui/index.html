@@ -4,20 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" type="image/x-icon" href="/school-bag.png" />
-    <link rel="stylesheet" href="./styles/vendor/datatables.css" />
-    <link rel="stylesheet" href="./styles/styles.css" />
-
     <title>Knapsack (SA)</title>
 
-    <script type="text/javascript" src="./libs/tailwindcss3417.min.js"></script>
-    <script type="text/javascript" src="./libs/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="./libs/dataTables.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/school-bag.png" />
+    <link rel="stylesheet" href="./styles/styles.css" />
+
+    <script type="text/javascript" src="/libs/tailwindcss3417.min.js"></script>
     <script type="text/javascript" src="/eel.js"></script>
-    <script type="text/javascript" src="/items_summary_table.js"></script>
-    <script type="text/javascript" src="/items_generator.js"></script>
-    <script type="text/javascript" src="/items_table.js"></script>
-    <script type="text/javascript" src="/main.js"></script>
   </head>
 
   <body class="bg-gray-50">
@@ -62,7 +55,7 @@
                 <input
                   type="number"
                   id="num_items"
-                  value="10"
+                  value="100"
                   class="w-24 p-2 border border-gray-300 rounded text-sm"
                 />
               </div>
@@ -86,7 +79,7 @@
                 type="number"
                 id="max_iter"
                 min="100"
-                value="1000"
+                value="3000"
                 step="100"
                 class="w-24 p-2 border border-gray-300 rounded text-sm"
               />
@@ -101,10 +94,45 @@
                 type="number"
                 id="initial_temp"
                 min="100"
-                value="2000"
+                value="3000"
                 step="100"
                 class="w-24 p-2 border border-gray-300 rounded text-sm"
               />
+            </div>
+            <div class="border border-gray-200">
+              <label
+                for="logarithmic-cooling"
+                class="flex items-center p-3 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
+              >
+                <input
+                  type="radio"
+                  id="logarithmic-cooling"
+                  name="cooling-schedule"
+                  value="logarithmic"
+                  onchange="handleCoolingMethodChange(this)"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                />
+                <div class="ml-3 text-sm">
+                  <p class="font-medium text-gray-700">Logarithmic Cooling</p>
+                </div>
+              </label>
+              <label
+                for="linear-cooling"
+                class="flex items-center p-3 rounded cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
+              >
+                <input
+                  type="radio"
+                  id="linear-cooling"
+                  name="cooling-schedule"
+                  value="linear"
+                  onchange="handleCoolingMethodChange(this)"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                  checked
+                />
+                <div class="ml-3 text-sm">
+                  <p class="font-medium text-gray-700">Geometric Cooling</p>
+                </div>
+              </label>
             </div>
             <div class="flex justify-between items-center py-2">
               <label
@@ -115,46 +143,11 @@
               <input
                 type="number"
                 id="cooling_factor"
-                min="0.8"
                 min="0"
-                value="0.95"
+                value="0.99"
                 step="0.001"
                 class="w-24 p-2 border border-gray-300 rounded text-sm"
               />
-            </div>
-
-            <div class="space-y-3">
-              <label
-                for="logarithmic-cooling"
-                class="flex items-center p-3 rounded border border-gray-200 cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
-              >
-                <input
-                  type="radio"
-                  id="logarithmic-cooling"
-                  name="cooling-schedule"
-                  value="logarithmic"
-                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                  checked
-                />
-                <div class="ml-3 text-sm">
-                  <p class="font-medium text-gray-700">Logarithmic Cooling</p>
-                </div>
-              </label>
-              <label
-                for="linear-cooling"
-                class="flex items-center p-3 rounded border border-gray-200 cursor-pointer hover:bg-gray-50 transition duration-150 ease-in-out"
-              >
-                <input
-                  type="radio"
-                  id="linear-cooling"
-                  name="cooling-schedule"
-                  value="linear"
-                  class="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
-                />
-                <div class="ml-3 text-sm">
-                  <p class="font-medium text-gray-700">Geometric Cooling</p>
-                </div>
-              </label>
             </div>
           </div>
 
@@ -172,24 +165,21 @@
 
       <main id="main-content" class="grow p-5 overflow-y-auto custom-scrollbar">
         <div class="bg-white p-6 rounded shadow">
-          <div
-            id="item-table-placeholder"
-            class="border-dashed border-gray-300 rounded"
-          >
-            <div class="table-container">
-              <table id="itemTable" class="display" style="width: 100%">
-                <thead>
-                  <tr>
-                    <th>Label</th>
-                    <th>Weight</th>
-                    <th>Value</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
+          <div class="flex justify-between align-center">
+            <h3 class="text-lg mb-2">
+              Edit the available items here
+              <p class="text-gray-400 text-sm">
+                double click the cell, and hit <b>Enter</b> once done.
+              </p>
+            </h3>
+            <button
+              onclick="addNewItem()"
+              class="text-green-500 hover:text-green-700 mb-2"
+            >
+              <span class="text-md">+</span> Add New Item
+            </button>
           </div>
+          <div id="items-grid" class="ag-theme-quartz"></div>
         </div>
       </main>
     </div>
@@ -244,9 +234,31 @@
         <div id="best-items-summary-container" class="w-full"></div>
       </div>
 
-      <!-- Results Dialog -->
-      <div class="p-6 border-t bg-white sticky bottom-0">
+      <div
+        class="flex flex-wrap justify-between items-center p-6 py-3 border-t bg-white sticky bottom-0 dialog-footer"
+      >
+        <div
+          class="p-2 w-28 my-2 bg-gray-50 border border-gray-200 rounded shadow"
+        >
+          <p class="text-xs font-medium text-gray-500">Status</p>
+          <div
+            class="flex items-center text-sm text-center font-semibold text-gray-900"
+          >
+            <span class="progress-status">Sending</span>
+            <div
+              class="ml-1 w-3 h-3 border-2 border-blue-500 border-t-transparent rounded-full animate-spin progress-status-spinner"
+            ></div>
+          </div>
+        </div>
+        <div class="run-configs flex flex-wrap my-2 gap-2"></div>
         <div class="flex justify-end gap-4">
+          <button
+            id="retry-btn"
+            onclick="startOptimization()"
+            class="bg-green-600 hover:bg-green-700 text-white text-md font-bold p-2 px-6 rounded transition duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Retry
+          </button>
           <button
             id="stop-btn"
             onclick="stopOptimization()"
@@ -264,5 +276,33 @@
         </div>
       </div>
     </dialog>
+
+    <dialog
+      id="error-dialog"
+      class="p-6 w-[30vw] rounded shadow-lg overflow-hidden"
+    >
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-red-600">Error Occurred</h2>
+      </div>
+      <p id="error-message-content" class="text-gray-700 mb-4">
+        Error Occurred
+      </p>
+      <div class="flex justify-end">
+        <button
+          onclick="hideErrorDialog()"
+          class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+        >
+          Close
+        </button>
+      </div>
+    </dialog>
+
+    <script src="./libs/ag-grid-community.min.js"></script>
+    <script type="text/javascript" src="/error_dialog.js"></script>
+    <script type="text/javascript" src="/items_summary_table.js"></script>
+    <script type="text/javascript" src="/items_generator.js"></script>
+    <script type="text/javascript" src="/items_table.js"></script>
+    <script type="text/javascript" src="/main.js"></script>
+    <script type="text/javascript" src="/test-cases.js"></script>
   </body>
 </html>
